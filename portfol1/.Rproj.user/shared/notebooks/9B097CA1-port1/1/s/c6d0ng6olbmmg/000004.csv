@@ -1,0 +1,11 @@
+"0","#install.packages('misty')"
+"0","library(misty)"
+"0",""
+"0","#center level-1 predictor at the grandmean"
+"0","data_pop$cgm_extrav<-misty::center(data_pop$extrav)"
+"0","data_pop$cgm_sex<-misty::center(data_pop$sex)"
+"0",""
+"0","#center level-1 predictor at the clustermean"
+"0","data_pop$cwc_extrav<-misty::center(data_pop$extrav, type=""cwc"", cluster = data_pop$class)"
+"2","Error: Character string in the argument 'type' does not  match with ""CGM"" or ""CWC"".
+"

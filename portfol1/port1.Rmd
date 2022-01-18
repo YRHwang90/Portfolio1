@@ -21,7 +21,7 @@ https://cehs-research.github.io/eBook_multilevel/mlm-2-levels-pupil-popularity.h
 I refer the code on these websites. 
 I followed the general tutorials that instructed on these website.
 
-However, I made some changes. 
+However, I made some changes. (I do some extra analysis that was not on the website etc. )
 I also explained by myself. 
 
 # Prepare
@@ -82,8 +82,8 @@ trying to predict popluarity of pupil by pupil's gender and extravert. Furthermo
 To sum up, we have
 
 Level-1 IV:
-pupil gender (SEX): coded as boy=0, girl=1
-Pupil's extroversion (extrav) : 10-point scale.
+pupil gender (SEX): coded as boy=0, girl=1  
+Pupil's extroversion (extrav) : 10-point scale.  
 
 Level-2IV:
 teacher's experience (texp)
@@ -137,11 +137,28 @@ data_pop %>%
 
 ```
 
+## Centering
+
+In the tutorial website, the author did not do the centering and keep analyzing. However, in most cases, it is not useful unless it has certian theoritical reasons. 
+
+```{r}
+#install.packages('misty')
+library(misty)
+
+#center level-1 predictor at the grandmean
+data_pop$cgm_extrav<-misty::center(data_pop$extrav)
+data_pop$cgm_sex<-misty::center(data_pop$sex)
+
+#center level-1 predictor at the clustermean
+data_pop$cwc_extrav<-misty::center(data_pop$extrav, type="CWC", cluster = data_pop$class)
+data_pop$cwc_sex<-misty::center(data_pop$sex, type="CWC", cluster = data_pop$class)
+
+```
 ## Single-level equation (regression)
 
 
 $$POP_{ij} = \beta_{0} + \beta_{1}SEX_{ij} + \beta_{2}EXT_{ij}+e_{ij}$$
-Random parameter: $var[e_{ij}]$
+Random parameter: $var[e_{ij}]$  
 fixed: intercept, slopes.
 
 I won't check the interaction at this point. 
@@ -159,15 +176,17 @@ summary(pop_lm)
 
 # MULTILEVEL ANALYSIS 
 
+
+
 ## 1. intercep-only model (unconditional model, a.k.a. null model)
 
-level 1: 
+level 1:   
 $$y_{ij} = \beta_{0j} + e_{ij}$$
-level2:
-$\beta_{0j}$ is the intercept, and this can be expressed as:
+level2:  
+$\beta_{0j}$ is the intercept, and this can be expressed as:  
 
 $$ \beta_{0j} = \gamma_{00} + u_{0j}$$
-$\gamma_{00}$  =  (overall mean)
+$\gamma_{00}$  =  (overall mean)   
 $u_{0j}$ = class effect, the variance of the mean for each class around the overall mean of DV (popular) score. 
 
 Combined together : mixed model 
@@ -184,6 +203,8 @@ fixed effect:  $\gamma_{00}$
 null<-lmer(popular~1 + (1|class), data=data_pop, REML=TRUE)
 summary(null)
 
+?lmer()
+
 ```
 
 Interpretaion: grandmean of pop of all students = 5.0779
@@ -198,7 +219,9 @@ $$\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}$$
 By hand... 
 $$\rho = \frac{0.7021}{0.7021 + 1.2218}$$
 
-or..using great package..
+
+
+or..using a great package..
 
 ```{r,message=F, warning=F}
 performance::icc(null)
@@ -207,4 +230,92 @@ performance::icc(null)
 
 interpretation:
 36.5% of variance is due to the group
+
+
+## 2. Add one level-1 predictor (fixed)
+
+level 1:   
+$$y_{ij} = \beta_{0j} + \beta_{1j}Extra_{ij} + e_{ij}$$
+level2:  
+
+level2:
+$$ \beta_{0j} = \gamma_{00} + u_{0j}$$
+
+$$ \beta_{1j} = \gamma_{00}$$ 
+we do not have a error term since this is fixed. 
+
+Combined together : mixed model 
+
+$$y_{ij} = \gamma_{00} + \gamma_{10}Extra_{ij} + u_{0j} + e_{ij}$$
+random effect: var[$e_{ij}$], var[$u_{0j}$]  
+fixed effect:  $\gamma_{00}$, $\gamma_{10}$
+
+
+```{r, message=FALSE}
+
+#My preference towards REML :D
+
+onefix<-lmer(popular~1 + cgm_extrav + (1|class), data=data_pop, REML=TRUE)
+summary(onefix)
+
+
+```
+
+ICC : proportion of between-class variance and total variance.
+
+$$\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}$$
+
+```{r, warning=FALSE, message=FALSE}
+
+performance::icc(onefix)
+
+?icc()
+```
+"While the adjusted ICC only relates to the random effects, the conditional ICC also takes the fixed effects variances into account (see Nakagawa et al. 2017). Typically, the adjusted ICC is of interest when the analysis of random effects is of interest."
+(source: #?icc(), R Documentation if icc() in performance package)
+
+## 3. Add one level-1 predictor (random)
+level 1:   
+$$y_{ij} = \beta_{0j} + \beta_{1j}Extra_{ij} + e_{ij}$$
+level2:  
+
+level2:
+$$ \beta_{0j} = \gamma_{00} + u_{0j}$$
+
+$$ \beta_{1j} = \gamma_{10} + u_{1j}$$ 
+
+
+Combined together : mixed model 
+
+$$y_{ij} = \gamma_{00} + \gamma_{10}Extra_{ij} + u_{0j} + u_{1j}Extrav_{ij} + e_{ij}$$
+
+
+random effect: var[$e_{ij}$], var[$u_{0j}$]  
+fixed effect:  $\gamma_{00}$, $\gamma_{10}$
+
+
+```{r, message=FALSE}
+
+#My preference towards REML :D
+
+oneram<-lmer(popular~1 + cgm_extrav + (1 + cgm_extrav|class), data=data_pop, REML=TRUE)
+summary(oneram)
+
+
+```
+
+ICC : proportion of between-class variance and total variance.
+
+$$\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}$$
+
+```{r, warning=FALSE, message=FALSE}
+
+performance::icc(oneram)
+
+```
+"While the adjusted ICC only relates to the random effects, the conditional ICC also takes the fixed effects variances into account (see Nakagawa et al. 2017). Typically, the adjusted ICC is of interest when the analysis of random effects is of interest."
+(source: #?icc(), R Documentation if icc() in performance package)
+
+
+
 

@@ -1,0 +1,20 @@
+"0","install.packages('center')
+"
+"2","Installing package into ‘C:/Users/hwany20/Documents/R/win-library/4.1’
+(as ‘lib’ is unspecified)
+"
+"1","Warning in "
+"1",""
+"1","install.packages"
+"1",""
+"1"," :
+  "
+"1",""
+"1","package â€˜centerâ€™ is not available for this version of R
+
+A version of this package for your version of R might be available elsewhere,
+see the ideas at
+https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages"
+"1",""
+"1","
+"

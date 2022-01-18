@@ -113,6 +113,7 @@ AMIB_persons <- merge(AMIB_persons, AMIB_imeans, by="id")
 AMIB_persons$bfi_n_c <- scale(AMIB_persons$bfi_n,center=TRUE,scale=FALSE)
 AMIB_persons$stress_trait_c <- scale(AMIB_persons$stress_trait,center=TRUE,scale=FALSE)
 
+?scale()
 #describe person-level data
 describe(AMIB_persons)
 ```
