@@ -1,0 +1,19 @@
+---
+title: "portfolio1"
+author: "Yoo Ri Hwang"
+date: "1/15/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## SOURCE 
+https://stat.utexas.edu/images/SSC/documents/SoftwareTutorials/MultilevelModeling.pdf
+
+I follow this tutorials and use the data used here. However, I made some changes to show that I do it by myself 
+
+e downloaded from:
+http://joophox.net/mlbook2/DataExchange.zip
+The six models described below are all variations of a two-l

@@ -1,0 +1,28 @@
+{
+    "id": "B240EC9F",
+    "path": "C:/data/GitHub/Portfolio1/portfol1/port1.Rmd",
+    "project_path": "port1.Rmd",
+    "type": "r_markdown",
+    "hash": "1223896733",
+    "contents": "",
+    "dirty": false,
+    "created": 1642464348801.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "1,23",
+        "scrollLine": "0",
+        "last_setup_crc32": "E3859F62bb338d19"
+    },
+    "folds": "71|36|75|0|\n92|21|102|0|\n106|21|113|0|\n118|21|124|0|\n128|21|137|0|\n149|21|156|0|\n",
+    "lastKnownWriteTime": 1642470087,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1642470087247,
+    "read_only": false,
+    "read_only_alternatives": []
+}
