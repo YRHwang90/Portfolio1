@@ -21,7 +21,7 @@ https://cehs-research.github.io/eBook_multilevel/mlm-2-levels-pupil-popularity.h
 I refer the code on these websites. 
 I followed the general tutorials that instructed on these website.
 
-However, I made some changes. 
+However, I made some changes. (I do some extra analysis that was not on the website etc. )
 I also explained by myself. 
 
 # Prepare
@@ -82,8 +82,8 @@ trying to predict popluarity of pupil by pupil's gender and extravert. Furthermo
 To sum up, we have
 
 Level-1 IV:
-pupil gender (SEX): coded as boy=0, girl=1
-Pupil's extroversion (extrav) : 10-point scale.
+pupil gender (SEX): coded as boy=0, girl=1  
+Pupil's extroversion (extrav) : 10-point scale.  
 
 Level-2IV:
 teacher's experience (texp)
@@ -141,7 +141,7 @@ data_pop %>%
 
 
 $$POP_{ij} = \beta_{0} + \beta_{1}SEX_{ij} + \beta_{2}EXT_{ij}+e_{ij}$$
-Random parameter: $var[e_{ij}]$
+Random parameter: $var[e_{ij}]$  
 fixed: intercept, slopes.
 
 I won't check the interaction at this point. 
@@ -161,13 +161,13 @@ summary(pop_lm)
 
 ## 1. intercep-only model (unconditional model, a.k.a. null model)
 
-level 1: 
+level 1:   
 $$y_{ij} = \beta_{0j} + e_{ij}$$
-level2:
-$\beta_{0j}$ is the intercept, and this can be expressed as:
+level2:  
+$\beta_{0j}$ is the intercept, and this can be expressed as:  
 
 $$ \beta_{0j} = \gamma_{00} + u_{0j}$$
-$\gamma_{00}$  =  (overall mean)
+$\gamma_{00}$  =  (overall mean)   
 $u_{0j}$ = class effect, the variance of the mean for each class around the overall mean of DV (popular) score. 
 
 Combined together : mixed model 
@@ -198,7 +198,7 @@ $$\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}$$
 By hand... 
 $$\rho = \frac{0.7021}{0.7021 + 1.2218}$$
 
-or..using great package..
+or..using a great package..
 
 ```{r,message=F, warning=F}
 performance::icc(null)
@@ -207,4 +207,6 @@ performance::icc(null)
 
 interpretation:
 36.5% of variance is due to the group
+
+## 2. 
 
