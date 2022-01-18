@@ -136,6 +136,29 @@ data_pop %>%
   facet_wrap(~ class) 
 
 ```
+3.
+
+```{r, message=F, warning=F}
+
+ggplot(data      = data_pop,
+       aes(x     = extrav,
+           y     = popular,
+           col   = class,
+           group = class)) + 
+  geom_point(size     = 1,
+             alpha    = .5,
+             position = "jitter") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+     geom_smooth(method = lm,
+              se     = FALSE,
+              size   = .5, 
+              alpha  = .8)+ # to add regression line
+  labs(title    = "Popularity vs. Extraversion")
+  
+  
+```
+This code (for third graph) was adpated from "https://www.rensvandeschoot.com/tutorials/lme4/"
 
 ## Centering
 
@@ -232,7 +255,7 @@ interpretation:
 36.5% of variance is due to the group
 
 
-## 2. Add one level-1 predictor (fixed)
+## 2.  one level-1 predictor (fixed)
 
 level 1:   
 $$y_{ij} = \beta_{0j} + \beta_{1j}Extra_{ij} + e_{ij}$$
@@ -274,7 +297,7 @@ performance::icc(onefix)
 "While the adjusted ICC only relates to the random effects, the conditional ICC also takes the fixed effects variances into account (see Nakagawa et al. 2017). Typically, the adjusted ICC is of interest when the analysis of random effects is of interest."
 (source: #?icc(), R Documentation if icc() in performance package)
 
-## 3. Add one level-1 predictor (random)
+## 3.  one level-1 predictor (random)
 level 1:   
 $$y_{ij} = \beta_{0j} + \beta_{1j}Extra_{ij} + e_{ij}$$
 level2:  
@@ -313,9 +336,90 @@ $$\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}$$
 performance::icc(oneram)
 
 ```
-"While the adjusted ICC only relates to the random effects, the conditional ICC also takes the fixed effects variances into account (see Nakagawa et al. 2017). Typically, the adjusted ICC is of interest when the analysis of random effects is of interest."
-(source: #?icc(), R Documentation if icc() in performance package)
 
 
+
+
+
+##  4. two level-1 predictor (random)
+
+level 1:   
+$$y_{ij} = \beta_{0j} + \beta_{1j}EXTRA_{ij} + \beta_{1j}SEX_{ij} + e_{ij}$$
+level2:  
+
+level2:
+$$ \beta_{0j} = \gamma_{00} + u_{0j}$$
+
+$$ \beta_{1j} = \gamma_{10} + u_{1j}$$ 
+$$ \beta_{2j} = \gamma_{20} + u_{2j}$$ 
+
+
+Combined together : mixed model 
+
+$$y_{ij} = \gamma_{00} + \gamma_{10}Extra_{ij} + \gamma_{20}SEX_{ij} + u_{0j} + u_{1j}Extrav_{ij} + u_{2j}SEX_{ij} + e_{ij}$$
+
+
+
+
+```{r, message=FALSE}
+
+#My preference towards REML :D
+
+tworam<-lmer(popular~1 + cgm_extrav + cgm_sex + (1 + cgm_extrav+cgm_sex|class), data=data_pop)
+summary(tworam)
+
+
+```
+with a random effect with a variance very close to zero, this model should be reconsidered : convergency  
+
+ICC : proportion of between-class variance and total variance.
+
+$$\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}$$
+
+```{r, warning=FALSE, message=FALSE}
+
+performance::icc(tworam)
+
+```
+
+##  5. one level-2 predictor and two level-1 predictor (w/o interaction)
+
+
+level 1:   
+$$y_{ij} = \beta_{0j} + \beta_{1j}EXTRA_{ij} + \beta_{1j}SEX_{ij} + e_{ij}$$
+
+level2:
+$$ \beta_{0j} = \gamma_{00} +\gamma_{01}Texp_{j} + u_{0j}$$
+
+$$ \beta_{1j} = \gamma_{10} + u_{1j}$$ 
+$$ \beta_{2j} = \gamma_{20} + u_{2j}$$ 
+
+
+Combined together : mixed model 
+
+$$y_{ij} = \gamma_{00} +\gamma_{01}Texp_{j} + \gamma_{10}Extra_{ij} + \gamma_{20}SEX_{ij} + u_{0j} + u_{1j}Extrav_{ij} + u_{2j}SEX_{ij} + e_{ij}$$
+
+
+
+
+```{r, message=FALSE}
+
+#My preference towards REML :D
+# 
+# nointer<-lmer(#######)
+# summary(tworam)
+
+
+```
+
+ICC : proportion of between-class variance and total variance.
+
+$$\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}$$
+
+```{r, warning=FALSE, message=FALSE}
+
+#performance::icc(nointer)
+
+```
 
 
