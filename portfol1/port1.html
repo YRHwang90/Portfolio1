@@ -413,7 +413,7 @@ summary(null)</code></pre>
 <p>interpretation: 36.5% of variance is due to the group</p>
 </div>
 <div id="add-one-level-1-predictor-fixed" class="section level2">
-<h2>Add one level-1 predictor (fixed)</h2>
+<h2>2. Add one level-1 predictor (fixed)</h2>
 <p>level 1:<br />
 <span class="math display">\[y_{ij} = \beta_{0j} + \beta_{1j}Extra_{ij} + e_{ij}\]</span> level2:</p>
 <p>level2: <span class="math display">\[ \beta_{0j} = \gamma_{00} + u_{0j}\]</span></p>
@@ -463,54 +463,54 @@ summary(onefix)</code></pre>
 <p>“While the adjusted ICC only relates to the random effects, the conditional ICC also takes the fixed effects variances into account (see Nakagawa et al. 2017). Typically, the adjusted ICC is of interest when the analysis of random effects is of interest.” (source: #?icc(), R Documentation if icc() in performance package)</p>
 </div>
 <div id="add-one-level-1-predictor-random" class="section level2">
-<h2>add one level-1 predictor (random)</h2>
+<h2>3. Add one level-1 predictor (random)</h2>
 <p>level 1:<br />
 <span class="math display">\[y_{ij} = \beta_{0j} + \beta_{1j}Extra_{ij} + e_{ij}\]</span> level2:</p>
 <p>level2: <span class="math display">\[ \beta_{0j} = \gamma_{00} + u_{0j}\]</span></p>
-<p><span class="math display">\[ \beta_{1j} = \gamma_{10} + u_{1j}\]</span> we do not have a error term since this is fixed.</p>
+<p><span class="math display">\[ \beta_{1j} = \gamma_{10} + u_{1j}\]</span></p>
 <p>Combined together : mixed model</p>
 <p><span class="math display">\[y_{ij} = \gamma_{00} + \gamma_{10}Extra_{ij} + u_{0j} + u_{1j}Extrav_{ij} + e_{ij}\]</span></p>
 <p>random effect: var[<span class="math inline">\(e_{ij}\)</span>], var[<span class="math inline">\(u_{0j}\)</span>]<br />
 fixed effect: <span class="math inline">\(\gamma_{00}\)</span>, <span class="math inline">\(\gamma_{10}\)</span></p>
 <pre class="r"><code>#My preference towards REML :D
 
-onefix&lt;-lmer(popular~1 + cgm_extrav + (1|class), data=data_pop, REML=TRUE)
-summary(onefix)</code></pre>
+oneram&lt;-lmer(popular~1 + cgm_extrav + (1 + cgm_extrav|class), data=data_pop, REML=TRUE)
+summary(oneram)</code></pre>
 <pre><code>## Linear mixed model fit by REML. t-tests use Satterthwaite&#39;s method [
 ## lmerModLmerTest]
-## Formula: popular ~ 1 + cgm_extrav + (1 | class)
+## Formula: popular ~ 1 + cgm_extrav + (1 + cgm_extrav | class)
 ##    Data: data_pop
 ## 
-## REML criterion at convergence: 5832.6
+## REML criterion at convergence: 5779.4
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -3.0644 -0.7267  0.0165  0.7088  3.3587 
+## -3.1961 -0.7291  0.0146  0.6816  3.2217 
 ## 
 ## Random effects:
-##  Groups   Name        Variance Std.Dev.
-##  class    (Intercept) 0.8406   0.9168  
-##  Residual             0.9304   0.9646  
+##  Groups   Name        Variance Std.Dev. Corr 
+##  class    (Intercept) 0.89178  0.9443        
+##           cgm_extrav  0.02599  0.1612   -0.88
+##  Residual             0.89492  0.9460        
 ## Number of obs: 2000, groups:  class, 100
 ## 
 ## Fixed effects:
-##              Estimate Std. Error        df t value Pr(&gt;|t|)    
-## (Intercept) 5.078e+00  9.421e-02 9.830e+01   53.90   &lt;2e-16 ***
-## cgm_extrav  4.863e-01  2.015e-02 1.965e+03   24.13   &lt;2e-16 ***
+##             Estimate Std. Error       df t value Pr(&gt;|t|)    
+## (Intercept)  5.03127    0.09702 97.07723   51.86   &lt;2e-16 ***
+## cgm_extrav   0.49286    0.02546 89.69832   19.36   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Correlation of Fixed Effects:
 ##            (Intr)
-## cgm_extrav 0.000</code></pre>
+## cgm_extrav -0.552</code></pre>
 <p>ICC : proportion of between-class variance and total variance.</p>
 <p><span class="math display">\[\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}\]</span></p>
-<pre class="r"><code>performance::icc(onefix)</code></pre>
+<pre class="r"><code>performance::icc(oneram)</code></pre>
 <pre><code>## # Intraclass Correlation Coefficient
 ## 
-##      Adjusted ICC: 0.475
-##   Conditional ICC: 0.391</code></pre>
-<pre class="r"><code>?icc()</code></pre>
+##      Adjusted ICC: 0.510
+##   Conditional ICC: 0.421</code></pre>
 <p>“While the adjusted ICC only relates to the random effects, the conditional ICC also takes the fixed effects variances into account (see Nakagawa et al. 2017). Typically, the adjusted ICC is of interest when the analysis of random effects is of interest.” (source: #?icc(), R Documentation if icc() in performance package)</p>
 </div>
 </div>

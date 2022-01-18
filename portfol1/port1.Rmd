@@ -178,7 +178,7 @@ summary(pop_lm)
 
 
 
-## 1. intercep-only model (unconditional model, a.k.a. null model)
+## 1. intercept-only model (unconditional model, a.k.a. null model)
 
 level 1:   
 $$y_{ij} = \beta_{0j} + e_{ij}$$
