@@ -19,10 +19,15 @@ https://stat.utexas.edu/images/SSC/documents/SoftwareTutorials/MultilevelModelin
 https://cehs-research.github.io/eBook_multilevel/mlm-2-levels-pupil-popularity.html
 
 I refer the code on these websites. 
-I followed the general tutorials that instructed on these website.
+I followed the general tutorials instructed on these website.
 
 However, I made some changes. (I do some extra analysis that was not on the website etc. )
 I also explained by myself. 
+
+###   Error
+performance::icc() error in the last two models,  
+I solve this problem by calculating by hand. 
+
 
 # Prepare
 
@@ -171,6 +176,7 @@ library(misty)
 #center level-1 predictor at the grandmean
 data_pop$cgm_extrav<-misty::center(data_pop$extrav)
 data_pop$cgm_sex<-misty::center(data_pop$sex)
+data_pop$cgm_texp<-misty::center(data_pop$texp)
 
 #center level-1 predictor at the clustermean
 data_pop$cwc_extrav<-misty::center(data_pop$extrav, type="CWC", cluster = data_pop$class)
@@ -226,7 +232,7 @@ fixed effect:  $\gamma_{00}$
 null<-lmer(popular~1 + (1|class), data=data_pop, REML=TRUE)
 summary(null)
 
-?lmer()
+
 
 ```
 
@@ -292,7 +298,7 @@ $$\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}$$
 
 performance::icc(onefix)
 
-?icc()
+
 ```
 "While the adjusted ICC only relates to the random effects, the conditional ICC also takes the fixed effects variances into account (see Nakagawa et al. 2017). Typically, the adjusted ICC is of interest when the analysis of random effects is of interest."
 (source: #?icc(), R Documentation if icc() in performance package)
@@ -386,7 +392,7 @@ performance::icc(tworam)
 
 
 level 1:   
-$$y_{ij} = \beta_{0j} + \beta_{1j}EXTRA_{ij} + \beta_{1j}SEX_{ij} + e_{ij}$$
+$$y_{ij} = \beta_{0j} + \beta_{1j}EXTRA_{ij} + \beta_{2j}SEX_{ij} + e_{ij}$$
 
 level2:
 $$ \beta_{0j} = \gamma_{00} +\gamma_{01}Texp_{j} + u_{0j}$$
@@ -397,17 +403,17 @@ $$ \beta_{2j} = \gamma_{20} + u_{2j}$$
 
 Combined together : mixed model 
 
-$$y_{ij} = \gamma_{00} +\gamma_{01}Texp_{j} + \gamma_{10}Extra_{ij} + \gamma_{20}SEX_{ij} + u_{0j} + u_{1j}Extrav_{ij} + u_{2j}SEX_{ij} + e_{ij}$$
+$$y_{ij} = \gamma_{00} +\gamma_{01}Texp_{j} + \gamma_{20}SEX_{ij} +  u_{1j}Extrav_{ij} + u_{2j}SEX_{ij} + u_{0j}+e_{ij}$$
 
 
-
+Due to convergence problem, I will use grand-mean centered level-2 variable. 
 
 ```{r, message=FALSE}
 
 #My preference towards REML :D
 # 
-# nointer<-lmer(#######)
-# summary(tworam)
+inter<-lmer(popular~1+cgm_extrav+cgm_sex+texp + (1+cgm_extrav+cgm_sex|class), data = data_pop)
+summary(inter)
 
 
 ```
@@ -415,10 +421,51 @@ $$y_{ij} = \gamma_{00} +\gamma_{01}Texp_{j} + \gamma_{10}Extra_{ij} + \gamma_{20
 ICC : proportion of between-class variance and total variance.
 
 $$\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}$$
-
+$$\rho = \frac{0.286}{0.286 + 0.551}$$
 ```{r, warning=FALSE, message=FALSE}
 
-#performance::icc(nointer)
+#performance::performance(nointer)
+
+# Error message: Random effect variances not available. Returned R2 does not account for random effects.
+```
+
+## 6. two levle-1 predictor, two level 1 predictior (with cross-level interaction)
+
+
+level 1:   
+$$y_{ij} = \beta_{0j} + \beta_{1j}EXTRA_{ij} + \beta_{2j}SEX_{ij} + e_{ij}$$
+
+level2:
+$$ \beta_{0j} = \gamma_{00} +\gamma_{01}Texp_{j} + u_{0j}$$
+
+$$ \beta_{1j} = \gamma_{10} +\gamma_{11}Texp_{j}+ u_{1j}$$ 
+$$ \beta_{2j} = \gamma_{20} +\gamma_{21}Texp_{j}+ u_{2j}$$ 
+
+
+Combined together : mixed model 
+
+$$y_{ij} = \gamma_{00} +\gamma_{01}Texp_{j} + \gamma_{10}Extra_{ij} + \gamma_{20}SEX_{ij} + \gamma_{11}Texp_{j}*Extrav_{ij} + \gamma_{21}Texp_{j}*Sex_{ij} + u_{1j}*Extrav_{ij} + u_{2j}SEX_{ij} + u_{0j}+e_{ij}$$
+
+
+Due to convergence problem, I will use grand-mean centered level-2 variable. 
+
+```{r, message=FALSE}
+
+#My preference towards REML :D
+# 
+inter<-lmer(popular~1+cgm_extrav+cgm_sex+cgm_texp + cgm_extrav*cgm_texp+cgm_sex*cgm_texp+ (1+cgm_extrav+cgm_sex|class), data = data_pop)
+summary(inter)
+
+
+```
+
+ICC : proportion of between-class variance and total variance.
+
+$$\rho = \frac{\sigma^{2}_{u0}}{\sigma^{2}_{u0} + \sigma^{2}_{e}}$$
+$$\rho = \frac{0.286486}{0.286486 + 0.552080}$$
+```{r, warning=FALSE, message=FALSE}
+
+#performance::icc(inter)
 
 ```
 

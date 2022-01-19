@@ -1,0 +1,10 @@
+"0",""
+"0","performance::performance(nointer)"
+"1","[31mRandom effect variances not available. Returned R2 does not account for random effects.
+[39m"
+"1","[34m# Indices of model performance[39m
+
+AIC      |      BIC | R2 (cond.) | R2 (marg.) |  RMSE | Sigma
+-------------------------------------------------------------
+4855.255 | 4916.865 |            |      0.625 | 0.714 | 0.743
+"
