@@ -3,7 +3,7 @@
     "path": "C:/data/GitHub/Portfolio1/portfol1/port1.Rmd",
     "project_path": "port1.Rmd",
     "type": "r_markdown",
-    "hash": "2868767056",
+    "hash": "1822290917",
     "contents": "",
     "dirty": false,
     "created": 1642552833057.0,
@@ -13,16 +13,16 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "26,19",
-        "scrollLine": "16",
-        "last_setup_crc32": ""
+        "cursorPosition": "418,5",
+        "scrollLine": "416",
+        "last_setup_crc32": "7C319D0Dbb338d19"
     },
     "folds": "",
-    "lastKnownWriteTime": 1644221105,
+    "lastKnownWriteTime": 1644222341,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1644221105106,
+    "last_content_update": 1644222341172,
     "read_only": false,
     "read_only_alternatives": []
 }

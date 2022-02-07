@@ -1,6 +1,11 @@
 "0","#install.packages('misty')"
 "0","library(misty)"
-"0",""
+"2","package ‘misty’ was built under R version 4.1.2"
+"2","|-------------------------------------|
+| misty 0.4.3 (2021-09-30)            |
+| Miscellaneous Functions T. Yanagida |
+|-------------------------------------|
+"
 "0","#center level-1 predictor at the grandmean"
 "0","data_pop$cgm_extrav<-misty::center(data_pop$extrav)"
 "0","data_pop$cgm_sex<-misty::center(data_pop$sex)"

@@ -345,18 +345,29 @@ $$y_{ij} = \gamma_{00} + \gamma_{10}Extra_{ij} + \gamma_{20}SEX_{ij} + u_{0j} + 
 
 
 
-```{r, message=FALSE}
+```{r}
 
-#My preference towards REML :D
+
 
 tworam<-lmer(popular~1 + cgm_extrav + cgm_sex + (1 + cgm_extrav+cgm_sex|class), data=data_pop)
 summary(tworam)
 
 
 ```
+model failed (convergency problem)
 with a random effect with a variance very close to zero, this model should be reconsidered : convergency  
 
+Alternatively, using ML: 
+```{r}
 
+
+tworam<-lmer(popular~1 + cgm_extrav + cgm_sex + (1 + cgm_extrav+cgm_sex|class), data=data_pop, REML=FALSE)
+summary(tworam)
+isSingular(tworam, tol = 1e-4)
+```
+ matrix argument is singular.
+ 
+ 
 ##  5. one level-2 predictor and two level-1 predictor (w/o interaction)
 
 
@@ -375,7 +386,6 @@ Combined together : mixed model
 $$y_{ij} = \gamma_{00} +\gamma_{01}Texp_{j} + \gamma_{20}SEX_{ij} +  u_{1j}Extrav_{ij} + u_{2j}SEX_{ij} + u_{0j}+e_{ij}$$
 
 
-Due to convergence problem, I will use grand-mean centered level-2 variable. 
 
 ```{r, message=FALSE}
 
@@ -406,15 +416,20 @@ Combined together : mixed model
 $$y_{ij} = \gamma_{00} +\gamma_{01}Texp_{j} + \gamma_{10}Extra_{ij} + \gamma_{20}SEX_{ij} + \gamma_{11}Texp_{j}*Extrav_{ij} + \gamma_{21}Texp_{j}*Sex_{ij} + u_{1j}*Extrav_{ij} + u_{2j}SEX_{ij} + u_{0j}+e_{ij}$$
 
 
-Due to convergence problem, I will use grand-mean centered level-2 variable. 
-
-```{r, message=FALSE}
+```{r}
 
 #My preference towards REML :D
 # 
 inter<-lmer(popular~1+cgm_extrav+cgm_sex+cgm_texp + cgm_extrav*cgm_texp+cgm_sex*cgm_texp+ (1+cgm_extrav+cgm_sex|class), data = data_pop)
 summary(inter)
+isSingular(inter, tol = 1e-4)
+# the matrix argument is singular. 
+```
+If i did not center level 2 variable, it is like this. 
+```{r}
 
+inter<-lmer(popular~1+cgm_extrav+cgm_sex+texp + cgm_extrav*texp+cgm_sex*texp+ (1+cgm_extrav+cgm_sex|class), data = data_pop)
+summary(inter)
 
 ```
 
