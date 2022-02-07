@@ -24,10 +24,8 @@ I followed the general tutorials instructed on these website.
 However, I made some changes. (I do some extra analysis that was not on the website etc. )
 I also explained by myself. 
 
-###   Error
-performance::icc() error in the last two models,  
-I solve this problem by calculating by hand. 
-
+###   notification 
+ICC calculated based on the null model. 
 
 # Prepare
 
