@@ -2,7 +2,7 @@
 title: "Portfolio1: MLM"
 author: "Yoo Ri Hwang"
 date: "1/15/2022"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
